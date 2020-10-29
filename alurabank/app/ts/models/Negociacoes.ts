@@ -12,6 +12,4 @@ export class Negociacoes{
       const newArray = this._negociacoes.slice();
       return newArray;
    }
-
-
 }
