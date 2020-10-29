@@ -32,9 +32,6 @@ System.register(["../models/Negociacao", "../models/Negociacoes", "../views/Mens
                     this._negociacoes = new Negociacoes_1.Negociacoes();
                     this._negociacoesView = new NegociacoesView_1.NegociacoesView('#negociacoesView');
                     this._mensagemView = new MensagemView_1.MensagemView("#mensagemView");
-                    this._inputData = document.querySelector('#data');
-                    this._inputQuantidade = document.querySelector('#quantidade');
-                    this._inputValor = document.querySelector('#valor');
                     this._negociacoesView.update(this._negociacoes);
                 }
                 adicionar(event) {
@@ -53,6 +50,15 @@ System.register(["../models/Negociacao", "../models/Negociacoes", "../views/Mens
                     return data.getDay() != DiaDaSemana.Domingo && data.getDay() != DiaDaSemana.Sabado;
                 }
             };
+            __decorate([
+                index_1.domInject('#data')
+            ], NegociacaoController.prototype, "_inputData", void 0);
+            __decorate([
+                index_1.domInject('#quantidade')
+            ], NegociacaoController.prototype, "_inputQuantidade", void 0);
+            __decorate([
+                index_1.domInject('#valor')
+            ], NegociacaoController.prototype, "_inputValor", void 0);
             __decorate([
                 index_1.logarTempoDeExecucao()
             ], NegociacaoController.prototype, "adicionar", null);
