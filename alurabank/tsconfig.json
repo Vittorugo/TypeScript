@@ -6,7 +6,8 @@
        "noImplicitAny":true,
        "removeComments":true,
        "module": "System",
-       "strictNullChecks": false
+       "strictNullChecks": false,
+       "experimentalDecorators": true
    },
    "include": [
        "app/ts/**/*"
