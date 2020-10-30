@@ -3,8 +3,8 @@ import { Negociacoes } from "../models/Negociacoes";
 import { MensagemView } from "../views/MensagemView";
 import { NegociacoesView } from "../views/NegociacoesView";
 import { logarTempoDeExecucao,  domInject, throttle} from '../helpers/decorators/index';
-import { NegociacaoParcial } from '../models/NegociacaoParcial';
 import { HandlerFunction, NegociacaoService } from '../service/NegociacaoService'
+import { imprimir } from "../helpers/Utils";
 
 
 export class NegociacaoController{
@@ -43,7 +43,8 @@ export class NegociacaoController{
       );
       
       this._negociacoes.adicionar(negociacao);
-      
+      imprimir(negociacao, this._negociacoes);
+
       this._negociacoesView.update(this._negociacoes);
       this._mensagemView.update('Negociação adicionada com sucesso!');
    }
@@ -53,7 +54,7 @@ export class NegociacaoController{
    }
 
    @throttle(500)
-   importaDados(){
+   async importaDados(){
 
       const isOk: HandlerFunction = function (res: Response){
          if(res.ok){
@@ -63,14 +64,23 @@ export class NegociacaoController{
          }
       }
       
-      this._negociacaoService.obterNegociacoes(isOk)
-         .then(negociacoes => {
-      
-            negociacoes.forEach(negociacao => 
-               this._negociacoes.adicionar(negociacao))
-               
-            this._negociacoesView.update(this._negociacoes);
-      });
+      try{
+         const negociacoesParaImportar = await this._negociacaoService.obterNegociacoes(isOk);
+         
+         const negociacoesJaImportadas = this._negociacoes.paraArray();
+
+         negociacoesParaImportar
+            .filter(negociacao => 
+               !negociacoesJaImportadas.some( jaImportada => 
+                     negociacao.ehIgual(jaImportada)))
+            .forEach(negociacao => 
+            this._negociacoes.adicionar(negociacao))
+            
+         this._negociacoesView.update(this._negociacoes);
+         
+      } catch(err){
+         this._mensagemView.update(err.message);
+      }
    }
 }
 
